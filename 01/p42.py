@@ -1,4 +1,3 @@
-#使用paramiko远程操作主机执行命令、上传文件
 
 import os
 import paramiko
@@ -6,16 +5,17 @@ import Crypto
 from functools import wraps
 from datetime import datetime
 
-def timethis(func):
 
+def timethis(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         start = datetime.now()
         result = func(*args, **kwargs)
         end = datetime.now()
-        print(func.__name__, end-start)
+        print(func.__name__, end - start)
         return result
-    return wrapper()
+
+    return wrapper
 
 
 class SSHManager():
@@ -48,7 +48,8 @@ class SSHManager():
             self._ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             self._ssh.connect(hostname=self._host, port=22, username=self._usr, password=self._passwd, timeout=5)
         except Exception:
-            raise RuntimeError("ssh connect to [host:{0}, usr:{1}, passwd:{2} faile]".format(self._host,self._usr,self._passwd))
+            raise RuntimeError(
+                "ssh connect to [host:{0}, usr:{1}, passwd:{2} faile]".format(self._host, self._usr, self._passwd))
 
     def _exec_commnad(self, cmd):
         try:
@@ -59,9 +60,9 @@ class SSHManager():
 
     def ssh_exec_cmd(self, cmd, path='~'):
         try:
-            result = self._exec_commnad('cd' + path + ';' + cmd)
+            result = self._exec_commnad('cd ' + path + ';' + cmd)
+            print(path)
             print(result)
-            return result
         except Exception:
             raise RuntimeError('exec cmd [%s] failed' % cmd)
 
@@ -77,7 +78,7 @@ class SSHManager():
         except Exception as e:
             return False
 
-#    @timethis
+    @timethis
     def _upload_file(self, local_file, remote_file):
         try:
             self._sftp.put(local_file, remote_file)
@@ -107,15 +108,16 @@ class SSHManager():
 
             self._check_remote_file(local_file, remote_file)
 
-            result = self._exec_commnad('chmod +x ' + remote_file + '; cd ' + exec_path + '; /bin/bash ' + remote_file)
+            result = self._exec_commnad('chmod +x ' + remote_file + '; cd ' + exec_path + ';/bin/bash ' + remote_file)
             print('exec shell result: ', result)
         except Exception as e:
             raise RuntimeError("ssh exec shell failed {0}".format(str(e)))
 
+
 if __name__ == '__main__':
     ip = '192.168.118.51'
     usr = 'root'
-    passwd = 'root'
+    passwd = 'rootroot'
     ssh = SSHManager(ip, usr, passwd)
-    ssh.ssh_exec_cmd('ls -l', '/etc/')
+    ssh.ssh_exec_cmd('ls -l', path='/etc/')
     ssh.ssh_exec_shell('/soft/a.sh', '/soft/a.sh', '/root/')

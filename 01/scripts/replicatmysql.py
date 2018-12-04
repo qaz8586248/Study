@@ -274,7 +274,7 @@ def setscript(ip, port):
         f2.close()
         ssh = SSHManager(i, '{0}'.format(User), '{0}'.format(Pwd))
         ssh._upload_file('/soft/mysql{0}{1}.server'.format(srvid,dataport),'{0}mysql'.format(Mysql_Start_Dir))
-        ssh.ssh_exec_cmd("chmod +x {0}mysql.server".format(Mysql_Start_Dir))
+        ssh.ssh_exec_cmd("chmod +x {0}mysql".format(Mysql_Start_Dir))
         os.system('rm -f /soft/mysql{0}{1}.server'.format(srvid,dataport))
         ssh.__del__()
 

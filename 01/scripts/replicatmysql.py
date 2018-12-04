@@ -87,7 +87,6 @@ class SSHManager():
     def ssh_exec_cmd(self, cmd):
         try:
             result = self._exec_commnad(cmd)
-            print(type(result))
             return result
         except Exception:
             raise RuntimeError('exec cmd [%s] failed' % cmd)
